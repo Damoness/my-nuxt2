@@ -51,19 +51,7 @@ export default {
     },
     getSystemInfo() {
       // 获取系统信息
-      if (typeof wx !== 'undefined') {
-        wx.getSystemInfo({
-          success: (res) => {
-            this.systemInfo = `${res.brand} ${res.model}`
-          },
-        })
-      } else if (typeof my !== 'undefined') {
-        my.getSystemInfo({
-          success: (res) => {
-            this.systemInfo = `${res.brand} ${res.model}`
-          },
-        })
-      }
+      this.systemInfo = window.__wxjs_environment
     },
     getLocation() {
       if (typeof wx !== 'undefined') {
@@ -91,7 +79,7 @@ export default {
     },
     scanQRCode() {
       if (typeof wx !== 'undefined') {
-        wx.scanCode({
+        wx.scanQRCode({
           success: (res) => {
             this.result = `扫码结果：${res.result}`
           },
