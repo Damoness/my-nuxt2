@@ -14,7 +14,7 @@
         <van-button type="primary" @click="getLocation">获取位置</van-button>
         <van-button type="info" @click="scanQRCode">扫描二维码</van-button>
         <van-button type="warning" @click="chooseImage">选择图片</van-button>
-        <van-button type="danger" @click="share">分享</van-button>
+        <van-button type="info" @click="goToNextPage">分享</van-button>
       </div>
 
       <div v-if="result" class="result-section">
@@ -36,10 +36,19 @@ export default {
       result: '',
     }
   },
+  computed: {
+    isWechatMiniProgram() {
+      return typeof wx !== 'undefined'
+    },
+    isAlipayMiniProgram() {
+      return typeof my !== 'undefined'
+    },
+  },
   mounted() {
     this.checkPlatform()
     this.getSystemInfo()
   },
+
   methods: {
     checkPlatform() {
       // 检查运行环境
@@ -54,23 +63,23 @@ export default {
       this.systemInfo = window.__wxjs_environment
     },
     getLocation() {
-      if (typeof wx !== 'undefined') {
+      if (this.isWechatMiniProgram) {
         wx.getLocation({
           type: 'gcj02',
           success: (res) => {
             this.result = `纬度：${res.latitude}，经度：${res.longitude}`
           },
-          fail: () => {
-            this.result = '获取位置失败'
+          fail: (e) => {
+            this.result = `获取位置失败:${e}`
           },
         })
-      } else if (typeof my !== 'undefined') {
+      } else if (this.isAlipayMiniProgram) {
         my.getLocation({
           success: (res) => {
             this.result = `纬度：${res.latitude}，经度：${res.longitude}`
           },
-          fail: () => {
-            this.result = '获取位置失败'
+          fail: (e) => {
+            this.result = `获取位置失败:${e}`
           },
         })
       } else {
@@ -78,30 +87,39 @@ export default {
       }
     },
     scanQRCode() {
-      if (typeof wx !== 'undefined') {
+      if (this.isWechatMiniProgram) {
         wx.scanQRCode({
           success: (res) => {
             this.result = `扫码结果：${res.result}`
           },
-          fail: () => {
-            this.result = '扫码失败'
+          fail: (e) => {
+            this.result = `扫码失败:${e}`
           },
         })
-      } else if (typeof my !== 'undefined') {
+      } else if (this.isAlipayMiniProgram) {
         my.scan({
           success: (res) => {
             this.result = `扫码结果：${res.code}`
           },
-          fail: () => {
-            this.result = '扫码失败'
+          fail: (e) => {
+            this.result = `扫码失败:${e}`
           },
         })
       } else {
         this.result = 'H5环境不支持该功能'
       }
     },
+    goToNextPage() {
+      if (this.isWechatMiniProgram) {
+        const url = 'https://www.baidu.com'
+        const path = `/pages/common/webview/index?url=${encodeURIComponent(
+          url
+        )}`
+        wx.miniProgram.navigateTo({ url: path })
+      }
+    },
     chooseImage() {
-      if (typeof wx !== 'undefined') {
+      if (this.isWechatMiniProgram) {
         wx.chooseImage({
           count: 1,
           success: (res) => {
@@ -111,7 +129,7 @@ export default {
             this.result = '选择图片失败'
           },
         })
-      } else if (typeof my !== 'undefined') {
+      } else if (this.isAlipayMiniProgram) {
         my.chooseImage({
           count: 1,
           success: (res) => {
@@ -121,24 +139,6 @@ export default {
             this.result = '选择图片失败'
           },
         })
-      } else {
-        this.result = 'H5环境不支持该功能'
-      }
-    },
-    share() {
-      if (typeof wx !== 'undefined') {
-        wx.showShareMenu({
-          withShareTicket: true,
-          success: () => {
-            this.result = '已开启分享'
-          },
-          fail: () => {
-            this.result = '开启分享失败'
-          },
-        })
-      } else if (typeof my !== 'undefined') {
-        my.showSharePanel()
-        this.result = '已调用分享面板'
       } else {
         this.result = 'H5环境不支持该功能'
       }
