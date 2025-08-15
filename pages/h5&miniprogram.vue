@@ -14,7 +14,7 @@
         <van-button type="primary" @click="getLocation">获取位置</van-button>
         <van-button type="info" @click="scanQRCode">扫描二维码</van-button>
         <van-button type="warning" @click="chooseImage">选择图片</van-button>
-        <van-button type="info" @click="goToNextPage">分享</van-button>
+        <van-button type="primary" @click="goToNextPage">跳转页面</van-button>
       </div>
 
       <div v-if="result" class="result-section">
@@ -111,7 +111,8 @@ export default {
     },
     goToNextPage() {
       if (this.isWechatMiniProgram) {
-        const url = 'https://www.baidu.com'
+        const url =
+          'https://aim-saas-share-dev.newtamp.cn/share-agent/chat?appId=67c913960d1c6dfdccf8099d&tenantId=3738250649398227'
         const path = `/pages/common/webview/index?url=${encodeURIComponent(
           url
         )}`
