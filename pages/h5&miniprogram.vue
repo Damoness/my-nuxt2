@@ -6,7 +6,6 @@
       <h2 class="section-title">基础信息</h2>
       <van-cell-group>
         <van-cell title="当前环境" :value="platform" />
-        <van-cell title="系统信息" :value="systemInfo" />
       </van-cell-group>
 
       <h2 class="section-title">交互功能</h2>
@@ -32,13 +31,12 @@ export default {
   data() {
     return {
       platform: '浏览器',
-      systemInfo: '-',
       result: '',
     }
   },
   computed: {
     isWechatMiniProgram() {
-      return typeof wx !== 'undefined'
+      return window.__wxjs_environment === 'miniprogram' && wx !== undefined
     },
     isAlipayMiniProgram() {
       return typeof my !== 'undefined'
@@ -46,21 +44,16 @@ export default {
   },
   mounted() {
     this.checkPlatform()
-    this.getSystemInfo()
   },
 
   methods: {
     checkPlatform() {
       // 检查运行环境
-      if (typeof wx !== 'undefined') {
+      if (this.isWechatMiniProgram) {
         this.platform = '微信小程序'
-      } else if (typeof my !== 'undefined') {
+      } else if (this.isAlipayMiniProgram) {
         this.platform = '支付宝小程序'
       }
-    },
-    getSystemInfo() {
-      // 获取系统信息
-      this.systemInfo = window.__wxjs_environment
     },
     getLocation() {
       if (this.isWechatMiniProgram) {
