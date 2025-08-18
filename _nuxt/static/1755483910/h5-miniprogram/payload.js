@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/h5-miniprogram", {data:[{}],fetch:{},mutations:void 0});
