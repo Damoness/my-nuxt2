@@ -25,7 +25,13 @@ export default {
   css: ['vant/lib/index.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/vant'],
+  plugins: [
+    '@/plugins/vant',
+    {
+      src: '@/plugins/vconsole',
+      ssr: false,
+    },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -55,8 +61,8 @@ export default {
     extendRoutes(routes, resolve) {
       routes.push({
         path: '/h5-miniprogram',
-        component: resolve(__dirname, 'pages/h5&miniprogram.vue')
+        component: resolve(__dirname, 'pages/h5&miniprogram.vue'),
       })
-    }
-  }
+    },
+  },
 }
