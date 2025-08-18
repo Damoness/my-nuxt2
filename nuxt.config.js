@@ -49,4 +49,14 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  // Router configuration
+  router: {
+    extendRoutes(routes, resolve) {
+      routes.push({
+        path: '/h5-miniprogram',
+        component: resolve(__dirname, 'pages/h5&miniprogram.vue')
+      })
+    }
+  }
 }
