@@ -1,3 +1,47 @@
+const proxies = [
+  'mns',
+  'marketing-product',
+  'stat',
+  'stat1',
+  'marketing-api',
+  'marketing-course',
+  'shorter',
+  'strategy_engine',
+  'finance/sina',
+  'newHttp',
+  'http',
+  'file-system',
+  'gridTrade/grid_trade',
+  'etf_index',
+  'support/fina',
+  'uc-system',
+  'aip_data',
+  'admin',
+  'activity-system',
+  'jg-marketing-uc',
+  'marketing-activity',
+  'marketing-material',
+  'grid_etf',
+  'tools',
+  'marketing-fund',
+]
+
+const baseUrl = 'https://yx.fullgoalservice.com.cn'
+
+const ProxyObject = proxies.reduce((acc, p) => {
+  acc[`/${p}`] = {
+    target: `${baseUrl}/${p}`,
+    changeOrigin: true,
+    secure: false,
+    pathRewrite: {
+      [`^/${p}`]: '',
+    },
+  }
+  return acc
+}, {})
+
+console.log('ProxyObject-', ProxyObject)
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -22,11 +66,14 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['vant/lib/index.css'],
+  css: [
+    // 'vant/lib/index.css'
+  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '@/plugins/vant',
+    '@/plugins/axios',
+    // '@/plugins/vant',
     {
       src: '@/plugins/vconsole',
       ssr: false,
@@ -46,15 +93,39 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/proxy',
   ],
+  // Proxy configuration
+  proxy: {
+    ...ProxyObject,
+  },
 
-  target: 'static',
+  // target: 'static',
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  // axios: {
+  //   // See https://github.com/nuxt-community/axios-module#options
+  //   proxy: true,
+  //   credentials: true,
+  // },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['vant'],
+    babel: {
+      plugins: [
+        [
+          'import',
+          {
+            libraryName: 'vant',
+            // libraryDirectory: 'es',
+            style: true,
+          },
+          'vant',
+        ],
+      ],
+    },
+  },
 
   // Router configuration
   router: {
